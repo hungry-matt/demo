@@ -1,4 +1,4 @@
-package com.example.demo.interfaces.domain;
+package com.example.demo.domain;
 
 public class MenuItem
 {

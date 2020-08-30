@@ -1,8 +1,11 @@
-package com.example.demo.interfaces.domain;
+package com.example.demo.domain;
+
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class MenuItemRepositoryImpl implements MenuItemRepository{
 
     private List<MenuItem> menuItems = new ArrayList<>();
@@ -12,7 +15,7 @@ public class MenuItemRepositoryImpl implements MenuItemRepository{
     }
 
     @Override
-    public List<MenuItem> findAllByResturantId(Long id) {
+    public List<MenuItem> findAllByRestaurantId(Long id) {
         return menuItems;
     }
 }

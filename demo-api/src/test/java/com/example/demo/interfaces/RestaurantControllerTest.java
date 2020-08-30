@@ -1,9 +1,10 @@
 package com.example.demo.interfaces;
 
-import com.example.demo.interfaces.domain.MenuItemRepository;
-import com.example.demo.interfaces.domain.MenuItemRepositoryImpl;
-import com.example.demo.interfaces.domain.RestaurantRepository;
-import com.example.demo.interfaces.domain.RestaurantRepositoryImpl;
+import com.example.demo.application.RestaurantService;
+import com.example.demo.domain.MenuItemRepository;
+import com.example.demo.domain.MenuItemRepositoryImpl;
+import com.example.demo.domain.RestaurantRepository;
+import com.example.demo.domain.RestaurantRepositoryImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class RestaurantControllerTest {
     @SpyBean(MenuItemRepositoryImpl.class)
     private MenuItemRepository menuItemRepository;
 
+    @SpyBean(RestaurantService.class)
+    private RestaurantService restaurantService;
 
     @Test
     public void list() throws Exception{
@@ -65,7 +68,7 @@ public class RestaurantControllerTest {
                         containsString("\"name\":\"Cyber food\"")
                 ))
                 .andExpect(content().string(
-                   containsString("kimchi")
+                        containsString("kimchi")
                 ));
     }
 }
