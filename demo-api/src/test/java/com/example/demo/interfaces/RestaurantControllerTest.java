@@ -1,14 +1,18 @@
 package com.example.demo.interfaces;
 
+import com.example.demo.interfaces.domain.MenuItemRepository;
+import com.example.demo.interfaces.domain.MenuItemRepositoryImpl;
+import com.example.demo.interfaces.domain.RestaurantRepository;
+import com.example.demo.interfaces.domain.RestaurantRepositoryImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -19,6 +23,14 @@ public class RestaurantControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    //Controller에 원하는 객체를 주입할 수 있음.
+    @SpyBean(RestaurantRepositoryImpl.class)
+    private RestaurantRepository restaurantRepository;
+
+    @SpyBean(MenuItemRepositoryImpl.class)
+    private MenuItemRepository menuItemRepository;
+
 
     @Test
     public void list() throws Exception{
@@ -41,7 +53,8 @@ public class RestaurantControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"Bob zip\"")
-                ));
+                ))
+        ;
 
         mvc.perform(get("/restaurants/2020"))
                 .andExpect(status().isOk())
@@ -50,6 +63,9 @@ public class RestaurantControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"Cyber food\"")
+                ))
+                .andExpect(content().string(
+                   containsString("kimchi")
                 ));
     }
 }
