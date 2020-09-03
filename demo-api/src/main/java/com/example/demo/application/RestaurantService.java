@@ -1,9 +1,6 @@
 package com.example.demo.application;
 
-import com.example.demo.domain.MenuItem;
-import com.example.demo.domain.MenuItemRepository;
-import com.example.demo.domain.Restaurant;
-import com.example.demo.domain.RestaurantRepository;
+import com.example.demo.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +15,13 @@ public class RestaurantService {
     @Autowired
     private MenuItemRepository menuItemRepository;
 
-    public RestaurantService(RestaurantRepository restaurantRepository, MenuItemRepository menuItemRepository) {
+    @Autowired
+    private MenuRepository menuRepository;
+
+    public RestaurantService(RestaurantRepository restaurantRepository, MenuItemRepository menuItemRepository, MenuRepository menuRepository) {
         this.restaurantRepository = restaurantRepository;
         this.menuItemRepository = menuItemRepository;
+        this.menuRepository = menuRepository;
     }
 
     public Restaurant getRestaurant(Long id) {
@@ -37,5 +38,10 @@ public class RestaurantService {
          List<Restaurant> restaurants = restaurantRepository.findAll();
 
         return restaurants;
+    }
+
+    public List<Menu> getMenus() {
+        List<Menu> menuList = menuRepository.findAllMenu();
+        return menuList;
     }
 }
