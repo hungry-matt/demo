@@ -17,12 +17,14 @@ public class RestaurantServiceTest {
 
     private MenuItemRepository menuItemRepository;
 
+    private MenuRepository menuRepository;
+
     @Before
     public void setUp() {
         menuItemRepository = new MenuItemRepositoryImpl();
         restaurantRepository = new RestaurantRepositoryImpl();
-
-        restaurantService = new RestaurantService(restaurantRepository, menuItemRepository);
+        menuRepository = new MenuRepositoryImpl();
+        restaurantService = new RestaurantService(restaurantRepository, menuItemRepository, menuRepository);
     }
 
     @Test
@@ -43,6 +45,17 @@ public class RestaurantServiceTest {
         Restaurant restaurant = restaurants.get(0);
 
         assertThat(restaurant.getId(), is(1004L));
+    }
+
+    @Test
+    public void getMenu() {
+        List<Menu> menuList = restaurantService.getMenus();
+
+        Menu menu = menuList.get(0);
+
+        assertThat(menu.getName(), is("chicken"));
+        assertThat(menu.getPrice(), is(5000));
+
     }
 
 }
