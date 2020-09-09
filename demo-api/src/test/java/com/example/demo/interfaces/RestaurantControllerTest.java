@@ -1,21 +1,22 @@
 package com.example.demo.interfaces;
 
 import com.example.demo.application.RestaurantService;
-import com.example.demo.domain.MenuItemRepository;
-import com.example.demo.domain.MenuItemRepositoryImpl;
-import com.example.demo.domain.RestaurantRepository;
-import com.example.demo.domain.RestaurantRepositoryImpl;
+import com.example.demo.domain.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import java.util.ArrayList;
+
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,18 +28,28 @@ public class RestaurantControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    //Controller에 원하는 객체를 주입할 수 있음.
-    @SpyBean(RestaurantRepositoryImpl.class)
-    private RestaurantRepository restaurantRepository;
-
-    @SpyBean(MenuItemRepositoryImpl.class)
-    private MenuItemRepository menuItemRepository;
-
-    @SpyBean(RestaurantService.class)
+    @MockBean
     private RestaurantService restaurantService;
+
+    //Controller에 원하는 객체를 주입할 수 있음.
+//    @SpyBean(RestaurantRepositoryImpl.class)
+//    private RestaurantRepository restaurantRepository;
+//
+//    @SpyBean(MenuItemRepositoryImpl.class)
+//    private MenuItemRepository menuItemRepository;
+//
+//    @SpyBean(RestaurantService.class)
+//    private RestaurantService restaurantService;
 
     @Test
     public void list() throws Exception{
+
+        ArrayList<Restaurant> restaurants = new ArrayList<>();
+
+        restaurants.add(new Restaurant(1004L, "Bob zip", "Seoul"));
+
+        given(restaurantService.getRestaurants()).willReturn(restaurants);
+
         mvc.perform(get("/restaurants"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(
@@ -51,6 +62,14 @@ public class RestaurantControllerTest {
 
     @Test
     public void detail() throws Exception {
+
+        Restaurant restaurant1 = new Restaurant(1004L, "Bob zip", "Seoul");
+        Restaurant restaurant2 = new Restaurant(2020L, "Cyber food", "Seoul");
+        restaurant2.addMenuItem(new MenuItem("kimchi"));
+
+        given(restaurantService.getRestaurant(1004L)).willReturn(restaurant1);
+        given(restaurantService.getRestaurant(2020L)).willReturn(restaurant2);
+
         mvc.perform(get("/restaurants/1004"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(
@@ -76,6 +95,11 @@ public class RestaurantControllerTest {
 
     @Test
     public void menu() throws Exception {
+        ArrayList<Menu> menuList = new ArrayList<>();
+        menuList.add(new Menu("chicken", 1000));
+
+        given(restaurantService.getMenus()).willReturn(menuList);
+
         //Mockmvc : 테스트에 필요한 기능을 가진 객체이며 스프링 MVC 동작을 재현할 수 있다.
         mvc.perform(get("/menu"))
                 //andExpect : 응답을 검증하는 역할
