@@ -4,47 +4,60 @@ import com.example.demo.domain.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 
-@RunWith(SpringRunner.class)
 public class RestaurantServiceTest {
 
-//    private RestaurantService restaurantService;
-//
-//    private RestaurantRepository restaurantRepository;
-//
-//    private MenuItemRepository menuItemRepository;
-//
-//    private MenuRepository menuRepository;
-
-    @MockBean
     private RestaurantService restaurantService;
 
-//    @Before
-//    public void setUp() {
-//        menuItemRepository = new MenuItemRepositoryImpl();
-//        restaurantRepository = new RestaurantRepositoryImpl();
-//        menuRepository = new MenuRepositoryImpl();
-//        restaurantService = new RestaurantService(restaurantRepository, menuItemRepository, menuRepository);
-//    }
+    @Mock
+    private RestaurantRepository restaurantRepository;
+
+    @Mock
+    private MenuItemRepository menuItemRepository;
+
+    @Mock
+    private MenuRepository menuRepository;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+
+        mockRestaurantRepository();
+
+        restaurantService = new RestaurantService(restaurantRepository, menuItemRepository, menuRepository);
+    }
+
+    private void mockRestaurantRepository() {
+        List<Restaurant> restaurants = new ArrayList<>();
+        Restaurant restaurant = new Restaurant(1004L, "Bob zip", "Seoul");
+        restaurant.addMenuItem(new MenuItem("kimchi"));
+        restaurants.add(restaurant);
+
+        given(restaurantRepository.findAll()).willReturn(restaurants);
+
+        given(restaurantRepository.findById(1004L)).willReturn(restaurant);
+
+        List<Menu> menuList = new ArrayList<>();
+        menuList.add(new Menu("chicken", 5000));
+
+        given(menuRepository.findAllMenu()).willReturn(menuList);
+    }
 
     @Test
     public void getRestaurant() {
 
-        Restaurant restaurant = new Restaurant(1004L, "Bob zip", "Seoul");
-
-        restaurant.addMenuItem(new MenuItem("kimchi"));
-
-        given(restaurantService.getRestaurant(1004L)).willReturn(restaurant);
-
-//        restaurant = restaurantService.getRestaurant(1004L);
+        Restaurant restaurant = restaurantService.getRestaurant(1004L);
 
         assertThat(restaurant.getId(), is(1004L));
 
