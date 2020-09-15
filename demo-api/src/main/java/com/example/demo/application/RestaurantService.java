@@ -44,4 +44,8 @@ public class RestaurantService {
         List<Menu> menuList = menuRepository.findAllMenu();
         return menuList;
     }
+
+    public Restaurant addRestaurant(Restaurant restaurant) {
+        return restaurantRepository.save(restaurant);
+    }
 }

@@ -3,17 +3,15 @@ package com.example.demo.application;
 import com.example.demo.domain.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 public class RestaurantServiceTest {
@@ -84,6 +82,18 @@ public class RestaurantServiceTest {
         assertThat(menu.getName(), is("chicken"));
         assertThat(menu.getPrice(), is(5000));
 
+    }
+
+    @Test
+    public void addRestaurant() {
+        Restaurant restaurant = new Restaurant("name", "address");
+        Restaurant saved = new Restaurant(1234L, "Joker", "Seoul");
+
+        given(restaurantRepository.save(any())).willReturn(saved);
+
+        Restaurant created = restaurantService.addRestaurant(restaurant);
+
+        assertThat(created.getId(), is(1234L));
     }
 
 }
