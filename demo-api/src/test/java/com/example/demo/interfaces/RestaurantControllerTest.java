@@ -118,15 +118,20 @@ public class RestaurantControllerTest {
 
     @Test
     public void create() throws Exception {
+        Restaurant restaurant = new Restaurant("name", "address");
+
+        restaurant.setId(1234);
+
+        given(restaurantService.addRestaurant(any())).willReturn(restaurant);
+
         mvc.perform(post("/restaurants")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"BeRyong\", \"address\":\"Seoul\"}"))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("location", "/restaurants/1234"))
                 .andExpect(content().string("{}"))
                 .andDo(MockMvcResultHandlers.print());
 
         //무엇이 와도 실행 될수 있게 any() 메서드를 넘김.
-        verify(restaurantService).addRestaurant(any());
+        //verify(restaurantService).addRestaurant(restaurant);
     }
 }
