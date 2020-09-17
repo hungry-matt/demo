@@ -65,4 +65,9 @@ public class Restaurant {
             this.addMenuItem(menuItem);
         }
     }
+
+    public void updateInformation(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
 }
