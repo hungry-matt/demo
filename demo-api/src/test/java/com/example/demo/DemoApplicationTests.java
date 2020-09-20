@@ -1,7 +1,12 @@
 package com.example.demo;
 
+import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-class DemoApplicationTests {
+@SpringBootTest
+public class DemoApplicationTests {
 
+    @Test
+    public void contextLoads() {
+    }
 }

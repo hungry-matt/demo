@@ -14,14 +14,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
@@ -49,7 +50,12 @@ public class RestaurantControllerTest {
 
         ArrayList<Restaurant> restaurants = new ArrayList<>();
 
-        restaurants.add(new Restaurant(1004L, "Bob zip", "Seoul"));
+        restaurants.add(Restaurant.builder()
+                .id(1004L)
+                .name("Bob zip")
+                .address("Seoul")
+                .build()
+        );
 
         given(restaurantService.getRestaurants()).willReturn(restaurants);
 
@@ -64,11 +70,25 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    public void detail() throws Exception {
+    public void detailWithExisted() throws Exception {
 
-        Restaurant restaurant1 = new Restaurant(1004L, "Bob zip", "Seoul");
-        Restaurant restaurant2 = new Restaurant(2020L, "Cyber food", "Seoul");
-        restaurant2.addMenuItem(new MenuItem("kimchi"));
+        Restaurant restaurant1 = Restaurant.builder()
+                .id(1004L)
+                .name("Bob zip")
+                .address("Seoul")
+                .build();
+
+        Restaurant restaurant2 = Restaurant.builder()
+                .id(2020L)
+                .name("Cyber food")
+                .address("Seoul")
+                .build();
+
+        MenuItem menuItem = MenuItem.builder()
+                .name("kimchi")
+                .build();
+
+        restaurant2.setMenuItems(Arrays.asList(menuItem));
 
         given(restaurantService.getRestaurant(1004L)).willReturn(restaurant1);
         given(restaurantService.getRestaurant(2020L)).willReturn(restaurant2);
@@ -97,6 +117,15 @@ public class RestaurantControllerTest {
     }
 
     @Test
+    public void detailWithNotExisted() throws Exception {
+        given(restaurantService.getRestaurant(404L))
+                .willThrow(new RestaurantNotFoundException(404L));
+        mvc.perform(get("/restaurants/404"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("{Colud Not Found}"));
+    }
+
+    @Test
     public void menu() throws Exception {
         ArrayList<Menu> menuList = new ArrayList<>();
         menuList.add(new Menu("chicken", 1000));
@@ -117,21 +146,52 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    public void create() throws Exception {
-        Restaurant restaurant = new Restaurant("name", "address");
+    public void createWithValidData() throws Exception {
+        given(restaurantService.addRestaurant(any())).will(invocation -> {
+           Restaurant restaurant = invocation.getArgument(0);
 
-        restaurant.setId(1234);
-
-        given(restaurantService.addRestaurant(any())).willReturn(restaurant);
+           return Restaurant.builder()
+                    .id(1234L)
+                    .name(restaurant.getName())
+                    .address(restaurant.getAddress())
+                    .build();
+        });
 
         mvc.perform(post("/restaurants")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"BeRyong\", \"address\":\"Seoul\"}"))
                 .andExpect(status().isCreated())
+                .andExpect(header().string("location", "/restaurants/1234"))
                 .andExpect(content().string("{}"))
                 .andDo(MockMvcResultHandlers.print());
 
         //무엇이 와도 실행 될수 있게 any() 메서드를 넘김.
-        //verify(restaurantService).addRestaurant(restaurant);
+        verify(restaurantService).addRestaurant(any());
+    }
+
+    @Test
+    public void createWithInvalidData() throws Exception {
+        mvc.perform(post("/restaurants")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"\", \"address\":\"\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updateWithValid() throws Exception {
+        mvc.perform(patch("/restaurants/1004")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\" : \"Joker bar\", \"address\" : \"Busan\"}"))
+                .andExpect(status().isOk());
+
+        verify(restaurantService).updateRestaurant(1004L, "Joker bar", "Busan");
+    }
+
+    @Test
+    public void updateWithInvalid() throws Exception {
+        mvc.perform(patch("/restaurants/1004")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\" : \"\", \"address\" : \"\"}"))
+                .andExpect(status().isBadRequest());
     }
 }

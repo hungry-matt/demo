@@ -7,7 +7,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -38,13 +40,18 @@ public class RestaurantServiceTest {
 
     private void mockRestaurantRepository() {
         List<Restaurant> restaurants = new ArrayList<>();
-        Restaurant restaurant = new Restaurant(1004L, "Bob zip", "Seoul");
-        restaurant.addMenuItem(new MenuItem("kimchi"));
+
+        Restaurant restaurant = Restaurant.builder()
+                .id(1004L)
+                .name("Bob zip")
+                .address("Seoul")
+                .build();
+
         restaurants.add(restaurant);
 
         given(restaurantRepository.findAll()).willReturn(restaurants);
 
-        given(restaurantRepository.findById(1004L)).willReturn(restaurant);
+        given(restaurantRepository.findById(1004L)).willReturn(Optional.of(restaurant));
 
         List<Menu> menuList = new ArrayList<>();
         menuList.add(new Menu("chicken", 5000));
@@ -53,15 +60,26 @@ public class RestaurantServiceTest {
     }
 
     @Test
-    public void getRestaurant() {
+    public void getRestaurantWithExisted() {
 
         Restaurant restaurant = restaurantService.getRestaurant(1004L);
 
+        MenuItem menuItem = MenuItem.builder()
+                .name("kimchi")
+                .build();
+
+        restaurant.setMenuItems(Arrays.asList(menuItem));
+
         assertThat(restaurant.getId(), is(1004L));
 
-        MenuItem menuItem = restaurant.getMenuItems().get(0);
+        MenuItem menuItem1 = restaurant.getMenuItems().get(0);
 
-        assertThat(menuItem.getName(), is("kimchi"));
+        assertThat(menuItem1.getName(), is("kimchi"));
+    }
+
+    @Test(expected = RestaurantNotFoundException.class)
+    public void getRestaurantWithNotExisted() {
+        restaurantService.getRestaurant(404L);
     }
 
     @Test
@@ -86,14 +104,36 @@ public class RestaurantServiceTest {
 
     @Test
     public void addRestaurant() {
-        Restaurant restaurant = new Restaurant("name", "address");
-        Restaurant saved = new Restaurant(1234L, "Joker", "Seoul");
+        given(restaurantRepository.save(any())).will(invocation -> {
+            Restaurant restaurant = invocation.getArgument(0);
+            restaurant.setId(1234L);
+            return restaurant;
+        });
 
-        given(restaurantRepository.save(any())).willReturn(saved);
+        Restaurant restaurant = Restaurant.builder()
+                .name("name")
+                .address("address")
+                .build();
 
         Restaurant created = restaurantService.addRestaurant(restaurant);
 
         assertThat(created.getId(), is(1234L));
     }
 
+    @Test
+    public void updateRestaurant() {
+
+        Restaurant restaurant = Restaurant.builder()
+                .id(1004L)
+                .name("Bob zip")
+                .address("Seoul")
+                .build();
+
+        given(restaurantRepository.findById(1004L)).willReturn(Optional.of(restaurant));
+
+        restaurantService.updateRestaurant(1004L, "Sool zip", "Busan");
+
+        assertThat(restaurant.getName(), is("Sool zip"));
+        assertThat(restaurant.getAddress(), is("Busan"));
+    }
 }
