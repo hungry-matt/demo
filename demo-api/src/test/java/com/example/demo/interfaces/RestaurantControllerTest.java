@@ -70,7 +70,7 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    public void detail() throws Exception {
+    public void detailWithExisted() throws Exception {
 
         Restaurant restaurant1 = Restaurant.builder()
                 .id(1004L)
@@ -117,6 +117,15 @@ public class RestaurantControllerTest {
     }
 
     @Test
+    public void detailWithNotExisted() throws Exception {
+        given(restaurantService.getRestaurant(404L))
+                .willThrow(new RestaurantNotFoundException(404L));
+        mvc.perform(get("/restaurants/404"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("{Colud Not Found}"));
+    }
+
+    @Test
     public void menu() throws Exception {
         ArrayList<Menu> menuList = new ArrayList<>();
         menuList.add(new Menu("chicken", 1000));
@@ -137,13 +146,7 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    public void create() throws Exception {
-//        Restaurant restaurant = new Restaurant("name", "address");
-//
-//        restaurant.setId(1234);
-
-//        given(restaurantService.addRestaurant(any())).willReturn(restaurant);
-
+    public void createWithValidData() throws Exception {
         given(restaurantService.addRestaurant(any())).will(invocation -> {
            Restaurant restaurant = invocation.getArgument(0);
 
@@ -158,7 +161,7 @@ public class RestaurantControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"BeRyong\", \"address\":\"Seoul\"}"))
                 .andExpect(status().isCreated())
-//                .andExpect(header().string("location", "/restaurant/1234"))
+                .andExpect(header().string("location", "/restaurants/1234"))
                 .andExpect(content().string("{}"))
                 .andDo(MockMvcResultHandlers.print());
 
@@ -167,12 +170,28 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    public void update() throws Exception {
+    public void createWithInvalidData() throws Exception {
+        mvc.perform(post("/restaurants")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"\", \"address\":\"\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updateWithValid() throws Exception {
         mvc.perform(patch("/restaurants/1004")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\" : \"Joker bar\", \"address\" : \"Busan\"}"))
                 .andExpect(status().isOk());
 
         verify(restaurantService).updateRestaurant(1004L, "Joker bar", "Busan");
+    }
+
+    @Test
+    public void updateWithInvalid() throws Exception {
+        mvc.perform(patch("/restaurants/1004")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\" : \"\", \"address\" : \"\"}"))
+                .andExpect(status().isBadRequest());
     }
 }
