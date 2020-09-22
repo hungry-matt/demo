@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -29,6 +30,8 @@ public class Restaurant {
     private String address;
 
     @Transient
+    //Json이 null이 아닐때만 추가
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<MenuItem> menuItems;
 
     public String getInformation() {
