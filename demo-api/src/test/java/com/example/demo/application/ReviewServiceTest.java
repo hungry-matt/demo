@@ -22,7 +22,7 @@ public class ReviewServiceTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        reviewService = new ReviewService();
+        reviewService = new ReviewService(reviewRepository);
     }
 
     @Test
