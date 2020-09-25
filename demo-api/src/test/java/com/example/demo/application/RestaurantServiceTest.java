@@ -29,13 +29,18 @@ public class RestaurantServiceTest {
     @Mock
     private MenuRepository menuRepository;
 
+    @Mock
+    private ReviewRepository reviewRepository;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
         mockRestaurantRepository();
 
-        restaurantService = new RestaurantService(restaurantRepository, menuItemRepository, menuRepository);
+        mockReviewRepository();
+
+        restaurantService = new RestaurantService(restaurantRepository, menuItemRepository, menuRepository, reviewRepository);
     }
 
     private void mockRestaurantRepository() {
@@ -59,6 +64,22 @@ public class RestaurantServiceTest {
         given(menuRepository.findAllMenu()).willReturn(menuList);
     }
 
+    private void mockReviewRepository() {
+        List<Review> reviews = new ArrayList<>();
+
+        reviews.add(Review.builder()
+                .restaurantId(1004L)
+                .id(1L)
+                .name("name")
+                .score(5)
+                .description("description")
+                .build()
+        );
+
+        given(reviewRepository.findAllByRestaurantId(1004L)).willReturn(reviews);
+
+    }
+
     @Test
     public void getRestaurantWithExisted() {
 
@@ -75,6 +96,10 @@ public class RestaurantServiceTest {
         MenuItem menuItem1 = restaurant.getMenuItems().get(0);
 
         assertThat(menuItem1.getName(), is("kimchi"));
+
+        Review review = restaurant.getReviews().get(0);
+
+        assertThat(review.getRestaurantId(), is(1004L));
     }
 
     @Test(expected = RestaurantNotFoundException.class)

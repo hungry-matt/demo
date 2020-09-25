@@ -23,6 +23,8 @@ public class ReviewController {
     public ResponseEntity created(@PathVariable("restaurantId") Long id
     ,@Valid @RequestBody Review resource) throws URISyntaxException {
 
+        resource.setRestaurantId(id);
+
         Review review = reviewService.addReview(resource);
 
         return ResponseEntity.created(new URI("/restaurants/" + id + "/reviews/" + review.getId())).body("{}");
