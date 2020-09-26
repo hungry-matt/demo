@@ -34,6 +34,10 @@ public class Restaurant {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<MenuItem> menuItems;
 
+    @Transient
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<Review> reviews;
+
     public String getInformation() {
         return name + " in " + address;
     }
@@ -43,6 +47,10 @@ public class Restaurant {
         //위와 같이 작성할 경우 this.menuItems는 menuItems를 참조만 하기 때문에
         //menuItems가 수정되면 같이 수정된다.
         this.menuItems = new ArrayList<>(menuItems);
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = new ArrayList<>(reviews);
     }
 
     public void updateInformation(String name, String address) {

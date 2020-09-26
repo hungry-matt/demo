@@ -72,26 +72,21 @@ public class RestaurantControllerTest {
     @Test
     public void detailWithExisted() throws Exception {
 
-        Restaurant restaurant1 = Restaurant.builder()
+        Restaurant restaurant = Restaurant.builder()
                 .id(1004L)
                 .name("Bob zip")
                 .address("Seoul")
                 .build();
 
-        Restaurant restaurant2 = Restaurant.builder()
-                .id(2020L)
-                .name("Cyber food")
-                .address("Seoul")
+        Review review = Review.builder()
+                .name("test")
+                .score(5)
+                .description("description")
                 .build();
 
-        MenuItem menuItem = MenuItem.builder()
-                .name("kimchi")
-                .build();
+        restaurant.setReviews(Arrays.asList(review));
 
-        restaurant2.setMenuItems(Arrays.asList(menuItem));
-
-        given(restaurantService.getRestaurant(1004L)).willReturn(restaurant1);
-        given(restaurantService.getRestaurant(2020L)).willReturn(restaurant2);
+        given(restaurantService.getRestaurant(1004L)).willReturn(restaurant);
 
         mvc.perform(get("/restaurants/1004"))
                 .andExpect(status().isOk())
@@ -101,19 +96,7 @@ public class RestaurantControllerTest {
                 .andExpect(content().string(
                         containsString("\"name\":\"Bob zip\"")
                 ))
-        ;
-
-        mvc.perform(get("/restaurants/2020"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(
-                        containsString("\"id\":2020")
-                ))
-                .andExpect(content().string(
-                        containsString("\"name\":\"Cyber food\"")
-                ))
-                .andExpect(content().string(
-                        containsString("kimchi")
-                ));
+                .andDo(MockMvcResultHandlers.print());
     }
 
     @Test

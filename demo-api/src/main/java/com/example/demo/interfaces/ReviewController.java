@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -20,10 +21,12 @@ public class ReviewController {
 
     @PostMapping("restaurants/{restaurantId}/reviews")
     public ResponseEntity created(@PathVariable("restaurantId") Long id
-    , @RequestBody Review review) throws URISyntaxException {
+    ,@Valid @RequestBody Review resource) throws URISyntaxException {
 
-        reviewService.addReview(review);
+        resource.setRestaurantId(id);
 
-        return ResponseEntity.created(new URI("/restaurants/" + id + "/reviews")).body("{}");
+        Review review = reviewService.addReview(resource);
+
+        return ResponseEntity.created(new URI("/restaurants/" + id + "/reviews/" + review.getId())).body("{}");
     }
 }
