@@ -32,12 +32,6 @@ public class RestaurantController {
         return restaurant;
     }
 
-    @GetMapping("/menu")
-    public List<Menu> restaurantsMenu() {
-        List<Menu> menuList = restaurantService.getMenus();
-        return menuList;
-    }
-
     @PostMapping("/restaurants")
     public ResponseEntity<?> create(@Valid @RequestBody Restaurant resource)
             throws URISyntaxException {

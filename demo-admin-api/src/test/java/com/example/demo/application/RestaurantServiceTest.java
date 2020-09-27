@@ -24,24 +24,13 @@ public class RestaurantServiceTest {
     @Mock
     private RestaurantRepository restaurantRepository;
 
-    @Mock
-    private MenuItemRepository menuItemRepository;
-
-    @Mock
-    private MenuRepository menuRepository;
-
-    @Mock
-    private ReviewRepository reviewRepository;
-
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
         mockRestaurantRepository();
 
-        mockReviewRepository();
-
-        restaurantService = new RestaurantService(restaurantRepository, menuItemRepository, menuRepository, reviewRepository);
+        restaurantService = new RestaurantService(restaurantRepository);
     }
 
     private void mockRestaurantRepository() {
@@ -55,55 +44,17 @@ public class RestaurantServiceTest {
 
         restaurants.add(restaurant);
 
-
-        List<MenuItem> menuItems = Arrays.asList(MenuItem.builder()
-                .restaurantId(1004L)
-                .name("kimchi")
-                .build());
-
         given(restaurantRepository.findAll()).willReturn(restaurants);
 
         given(restaurantRepository.findById(1004L)).willReturn(Optional.of(restaurant));
-
-        given(menuItemRepository.findAllByRestaurantId(1004L)).willReturn(menuItems);
-
-        List<Menu> menuList = new ArrayList<>();
-        menuList.add(new Menu("chicken", 5000));
-
-        given(menuRepository.findAllMenu()).willReturn(menuList);
-
-    }
-
-    private void mockReviewRepository() {
-        List<Review> reviews = new ArrayList<>();
-
-        reviews.add(Review.builder()
-                .restaurantId(1004L)
-                .id(1L)
-                .name("name")
-                .score(5)
-                .description("bad")
-                .build()
-        );
-
-        given(reviewRepository.findAllByRestaurantId(1004L)).willReturn(reviews);
 
     }
 
     @Test
     public void getRestaurantWithExisted() {
-
         Restaurant restaurant = restaurantService.getRestaurant(1004L);
 
         assertThat(restaurant.getId(), is(1004L));
-
-        MenuItem menuItem1 = restaurant.getMenuItems().get(0);
-
-        assertThat(menuItem1.getName(), is("kimchi"));
-
-        Review review = restaurant.getReviews().get(0);
-
-        assertThat(review.getDescription(), is("bad"));
     }
 
     @Test(expected = RestaurantNotFoundException.class)
@@ -118,17 +69,6 @@ public class RestaurantServiceTest {
         Restaurant restaurant = restaurants.get(0);
 
         assertThat(restaurant.getId(), is(1004L));
-    }
-
-    @Test
-    public void getMenu() {
-        List<Menu> menuList = restaurantService.getMenus();
-
-        Menu menu = menuList.get(0);
-
-        assertThat(menu.getName(), is("chicken"));
-        assertThat(menu.getPrice(), is(5000));
-
     }
 
     @Test

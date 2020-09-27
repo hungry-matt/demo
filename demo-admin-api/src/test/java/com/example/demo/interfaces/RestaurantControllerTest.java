@@ -78,14 +78,6 @@ public class RestaurantControllerTest {
                 .address("Seoul")
                 .build();
 
-        Review review = Review.builder()
-                .name("test")
-                .score(5)
-                .description("test!")
-                .build();
-
-        restaurant.setReviews(Arrays.asList(review));
-
         given(restaurantService.getRestaurant(1004L)).willReturn(restaurant);
 
         mvc.perform(get("/restaurants/1004"))
@@ -95,9 +87,6 @@ public class RestaurantControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"Bob zip\"")
-                ))
-                .andExpect(content().string(
-                        containsString("test!")
                 ))
                 .andDo(MockMvcResultHandlers.print());
     }
@@ -109,26 +98,6 @@ public class RestaurantControllerTest {
         mvc.perform(get("/restaurants/404"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("{Colud Not Found}"));
-    }
-
-    @Test
-    public void menu() throws Exception {
-        ArrayList<Menu> menuList = new ArrayList<>();
-        menuList.add(new Menu("chicken", 1000));
-
-        given(restaurantService.getMenus()).willReturn(menuList);
-
-        //Mockmvc : 테스트에 필요한 기능을 가진 객체이며 스프링 MVC 동작을 재현할 수 있다.
-        mvc.perform(get("/menu"))
-                //andExpect : 응답을 검증하는 역할
-                //응답상태 검증
-                .andExpect(status().isOk())
-                //응답내용 검증
-                .andExpect(content().string(
-                        containsString("chicken")
-                ))
-                //요청,응답 메세지 확인
-                .andDo(MockMvcResultHandlers.print());
     }
 
     @Test

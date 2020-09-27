@@ -33,6 +33,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+//intellij 기본설정 문제로 멀티 모듈 적용이 되지 않아 추가
 bootJar {
     enabled = false
 }

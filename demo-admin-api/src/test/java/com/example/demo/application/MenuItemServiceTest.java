@@ -10,10 +10,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -28,6 +31,22 @@ public class MenuItemServiceTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         menuItemService = new MenuItemService(menuItemRepository);
+    }
+
+    @Test
+    public void getMenuItems() {
+        given(menuItemRepository.findAllByRestaurantId(1004L)).willReturn(Arrays.asList(
+                MenuItem.builder()
+                .name("test")
+                .restaurantId(1004L)
+                .build()
+        ));
+
+        List<MenuItem> menuItems = menuItemService.getMenuItems(1004L);
+
+        MenuItem menuItem = menuItems.get(0);
+
+        assertThat(menuItem.getRestaurantId(), is(1004L));
     }
 
     @Test

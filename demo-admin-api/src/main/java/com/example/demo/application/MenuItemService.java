@@ -2,7 +2,6 @@ package com.example.demo.application;
 
 import com.example.demo.domain.MenuItem;
 import com.example.demo.domain.MenuItemRepository;
-import com.example.demo.domain.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,4 +24,7 @@ public class MenuItemService {
         }
     }
 
+    public List<MenuItem> getMenuItems(long restaurantId) {
+        return menuItemRespository.findAllByRestaurantId(restaurantId);
+    }
 }
