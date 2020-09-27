@@ -2,5 +2,5 @@ rootProject.name = 'demo'
 
 include 'demo-admin-api'
 include 'demo-common'
-include 'demo-cutomer-api'
+include 'demo-customer-api'
 
