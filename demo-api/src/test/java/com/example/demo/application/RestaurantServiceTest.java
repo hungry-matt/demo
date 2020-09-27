@@ -15,6 +15,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 public class RestaurantServiceTest {
 
@@ -54,14 +55,23 @@ public class RestaurantServiceTest {
 
         restaurants.add(restaurant);
 
+
+        List<MenuItem> menuItems = Arrays.asList(MenuItem.builder()
+                .restaurantId(1004L)
+                .name("kimchi")
+                .build());
+
         given(restaurantRepository.findAll()).willReturn(restaurants);
 
         given(restaurantRepository.findById(1004L)).willReturn(Optional.of(restaurant));
+
+        given(menuItemRepository.findAllByRestaurantId(1004L)).willReturn(menuItems);
 
         List<Menu> menuList = new ArrayList<>();
         menuList.add(new Menu("chicken", 5000));
 
         given(menuRepository.findAllMenu()).willReturn(menuList);
+
     }
 
     private void mockReviewRepository() {
@@ -72,7 +82,7 @@ public class RestaurantServiceTest {
                 .id(1L)
                 .name("name")
                 .score(5)
-                .description("description")
+                .description("bad")
                 .build()
         );
 
@@ -85,12 +95,6 @@ public class RestaurantServiceTest {
 
         Restaurant restaurant = restaurantService.getRestaurant(1004L);
 
-        MenuItem menuItem = MenuItem.builder()
-                .name("kimchi")
-                .build();
-
-        restaurant.setMenuItems(Arrays.asList(menuItem));
-
         assertThat(restaurant.getId(), is(1004L));
 
         MenuItem menuItem1 = restaurant.getMenuItems().get(0);
@@ -99,7 +103,7 @@ public class RestaurantServiceTest {
 
         Review review = restaurant.getReviews().get(0);
 
-        assertThat(review.getRestaurantId(), is(1004L));
+        assertThat(review.getDescription(), is("bad"));
     }
 
     @Test(expected = RestaurantNotFoundException.class)

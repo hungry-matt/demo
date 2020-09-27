@@ -81,7 +81,7 @@ public class RestaurantControllerTest {
         Review review = Review.builder()
                 .name("test")
                 .score(5)
-                .description("description")
+                .description("test!")
                 .build();
 
         restaurant.setReviews(Arrays.asList(review));
@@ -95,6 +95,9 @@ public class RestaurantControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"Bob zip\"")
+                ))
+                .andExpect(content().string(
+                        containsString("test!")
                 ))
                 .andDo(MockMvcResultHandlers.print());
     }
