@@ -12,12 +12,16 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
@@ -31,30 +35,22 @@ public class ReviewControllerTest {
     private ReviewService reviewService;
 
     @Test
-    public void created() throws Exception {
-        given(reviewService.addReview(eq(1L), any())).willReturn(
-                Review.builder()
-                    .id(1004L)
-                    .build()
+    public void list() throws Exception {
+        List<Review> reviews = new ArrayList<>();
+
+        reviews.add(Review.builder()
+                .name("test")
+                .score(5)
+                .description("Cool")
+                .build()
         );
 
-        mvc.perform(post("/restaurants/1/reviews/")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"joker\", \"score\" : \"3\", \"description\":\"test\"}"))
-                .andExpect(status().isCreated())
-                .andExpect(content().string("{}"))
-                .andExpect(header().string("location", "/restaurants/1/reviews/1004"));
+        given(reviewService.getReviews()).willReturn(reviews);
 
-        verify(reviewService).addReview(eq(1L), any());
-    }
-
-    @Test
-    public void notCreated() throws Exception {
-        mvc.perform(post("/restaurants/1/reviews/")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andDo(MockMvcResultHandlers.print());
-
-        verify(reviewService, never()).addReview(eq(1L), any());
+        mvc.perform(get("/restaurants/reviews"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(
+                        containsString("\"description\":\"Cool\"")
+                ));
     }
 }
