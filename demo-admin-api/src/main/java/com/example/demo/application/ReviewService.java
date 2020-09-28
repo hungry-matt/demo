@@ -20,7 +20,7 @@ public class ReviewService {
     }
 
     public List<Review> getReviews() {
-        List<Review> reviews = (List<Review>) reviewRepository.findAll();
+        List<Review> reviews = reviewRepository.findAll();
         return reviews;
     }
 }

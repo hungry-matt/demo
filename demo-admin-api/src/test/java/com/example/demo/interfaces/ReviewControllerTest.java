@@ -47,7 +47,7 @@ public class ReviewControllerTest {
 
         given(reviewService.getReviews()).willReturn(reviews);
 
-        mvc.perform(get("/restaurants/reviews"))
+        mvc.perform(get("/reviews"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(
                         containsString("\"description\":\"Cool\"")
