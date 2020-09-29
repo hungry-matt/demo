@@ -1,3 +1,6 @@
 rootProject.name = 'demo'
 
-include 'demo-api'
+include 'demo-admin-api'
+include 'demo-common'
+include 'demo-customer-api'
+
