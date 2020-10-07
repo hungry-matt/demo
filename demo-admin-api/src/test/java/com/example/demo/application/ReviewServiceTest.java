@@ -49,4 +49,5 @@ public class ReviewServiceTest {
 
         assertThat(review.getDescription(), is("Cool"));
     }
+
 }
