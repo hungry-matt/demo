@@ -1,6 +1,5 @@
 package com.example.demo.application;
 
-import com.example.demo.application.RestaurantService;
 import com.example.demo.domain.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,7 +60,7 @@ public class RestaurantServiceTest {
                 .name("kimchi")
                 .build());
 
-        given(restaurantRepository.findAll()).willReturn(restaurants);
+        given(restaurantRepository.findAllByAddressContaining("Seoul")).willReturn(restaurants);
 
         given(restaurantRepository.findById(1004L)).willReturn(Optional.of(restaurant));
 
@@ -113,7 +112,7 @@ public class RestaurantServiceTest {
 
     @Test
     public void getRestaurants() {
-        List<Restaurant> restaurants = restaurantService.getRestaurants();
+        List<Restaurant> restaurants = restaurantService.getRestaurants("Seoul");
 
         Restaurant restaurant = restaurants.get(0);
 
