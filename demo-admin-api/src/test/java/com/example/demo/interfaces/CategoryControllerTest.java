@@ -1,6 +1,8 @@
 package com.example.demo.interfaces;
 
+import com.example.demo.application.CategoryService;
 import com.example.demo.application.RegionService;
+import com.example.demo.domain.Category;
 import com.example.demo.domain.Region;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +18,6 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,43 +26,41 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(RegionController.class)
-public class RegionControllerTest {
-
+@WebMvcTest(CategoryController.class)
+public class CategoryControllerTest {
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private RegionService regionService;
+    private CategoryService categoryService;
 
     @Test
     public void list() throws Exception {
-        List<Region> regions = new ArrayList<>();
+        List<Category> categories = new ArrayList<>();
 
-        regions.add(Region.builder()
+        categories.add(Category.builder()
                 .name("Seoul")
                 .build());
 
-        given(regionService.getRegions()).willReturn(regions);
+        given(categoryService.getCategories()).willReturn(categories);
 
-        mvc.perform(get("/regions"))
+        mvc.perform(get("/categories"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Seoul")));
     }
 
     @Test
     public void create() throws Exception {
-        Region region = Region.builder().name("Seoul").build();
+        Category category = Category.builder().name("Seoul").build();
 
-        given(regionService.addRegion("Seoul")).willReturn(region);
+        given(categoryService.addCategory("Seoul")).willReturn(category);
 
-        mvc.perform(post("/regions")
+        mvc.perform(post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"Seoul\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(content().string("{}"));
 
-        verify(regionService).addRegion("Seoul");
+        verify(categoryService).addCategory("Seoul");
     }
-
 }
