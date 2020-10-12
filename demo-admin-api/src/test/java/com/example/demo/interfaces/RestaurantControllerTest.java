@@ -109,12 +109,13 @@ public class RestaurantControllerTest {
                     .id(1234L)
                     .name(restaurant.getName())
                     .address(restaurant.getAddress())
+                    .categoryId(1L)
                     .build();
         });
 
         mvc.perform(post("/restaurants")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"BeRyong\", \"address\":\"Seoul\"}"))
+                .content("{\"categoryId\":1, \"name\":\"BeRyong\", \"address\":\"Seoul\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", "/restaurants/1234"))
                 .andExpect(content().string("{}"))
@@ -136,7 +137,7 @@ public class RestaurantControllerTest {
     public void updateWithValid() throws Exception {
         mvc.perform(patch("/restaurants/1004")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\" : \"Joker bar\", \"address\" : \"Busan\"}"))
+                .content("{\"categoryId\":1,\"name\" : \"Joker bar\", \"address\" : \"Busan\"}"))
                 .andExpect(status().isOk());
 
         verify(restaurantService).updateRestaurant(1004L, "Joker bar", "Busan");

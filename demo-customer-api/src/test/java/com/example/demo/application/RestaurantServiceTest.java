@@ -50,6 +50,7 @@ public class RestaurantServiceTest {
                 .id(1004L)
                 .name("Bob zip")
                 .address("Seoul")
+                .categoryId(1L)
                 .build();
 
         restaurants.add(restaurant);
@@ -60,7 +61,7 @@ public class RestaurantServiceTest {
                 .name("kimchi")
                 .build());
 
-        given(restaurantRepository.findAllByAddressContaining("Seoul")).willReturn(restaurants);
+        given(restaurantRepository.findAllByAddressContainingAndCategoryId("Seoul", 1L)).willReturn(restaurants);
 
         given(restaurantRepository.findById(1004L)).willReturn(Optional.of(restaurant));
 
@@ -112,7 +113,7 @@ public class RestaurantServiceTest {
 
     @Test
     public void getRestaurants() {
-        List<Restaurant> restaurants = restaurantService.getRestaurants("Seoul");
+        List<Restaurant> restaurants = restaurantService.getRestaurants("Seoul", 1L);
 
         Restaurant restaurant = restaurants.get(0);
 
