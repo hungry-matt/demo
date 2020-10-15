@@ -32,7 +32,13 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public String updateUser(Long id, String name, String email, Long level) {
-        return "";
+    public User updateUser(Long id, String name, String email, Long level) {
+        User user = userRepository.findById(id).orElse(null);
+
+        user.setName(name);
+        user.setEmail(email);
+        user.setLevel(level);
+
+        return user;
     }
 }
