@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +20,9 @@ public class Category {
     @Id
     @GeneratedValue
     private Long id;
+
+    @NotNull
+    private Long categoryId;
 
     private String name;
 }

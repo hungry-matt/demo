@@ -21,9 +21,10 @@ public class RestaurantController {
 
     @GetMapping("/restaurants")
     public List<Restaurant> restaurant(
-            @RequestParam("region") String region
+            @RequestParam(value="region", required=false, defaultValue="서울") String region
+            , @RequestParam(value="category", required=false, defaultValue="1") Long category
     ) {
-        List<Restaurant> restaurants =  restaurantService.getRestaurants(region);
+        List<Restaurant> restaurants =  restaurantService.getRestaurants(region, category);
 
         return restaurants;
     }
