@@ -1,11 +1,19 @@
 package com.example.demo.interfaces;
 
+import com.example.demo.application.UserService;
 import com.example.demo.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@RestController
 public class UserController {
+
+    @Autowired
+    private UserService userService;
 
     // 1. User List
     // 2. User create -> 회원가입
@@ -15,6 +23,7 @@ public class UserController {
 
     @GetMapping("/users")
     public List<User> list() {
-        return null;
+        List<User> users = userService.getUsers();
+        return users;
     }
 }
