@@ -11,9 +11,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
@@ -21,24 +24,45 @@ public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private UserService userService;
+
     @Before
     public void setUp() {
+        userService = new UserService(userRepository);
     }
 
     @Test
     public void getUsers() {
-        List<User> users = new ArrayList<>();
+        List<User> mockUsers = new ArrayList<>();
 
-        users.add(User.builder()
+        mockUsers.add(User.builder()
                 .name("test")
                 .email("test@example.com")
                 .level(1L)
                 .build());
 
-        given(userRepository.findAll()).willReturn(users);
+        given(userRepository.findAll()).willReturn(mockUsers);
+
+        List<User> users = userService.getUsers();
 
         User user = users.get(0);
 
-        assertThat(user.getName()).isEqualTo("test");
+        assertThat(user.getName(), is("test"));
     }
+
+    @Test
+    public void addUser() {
+        String name = "admin";
+        String email = "admin@example.com";
+
+        User mockUser = User.builder().name(name).email(email).build();
+
+        given(userRepository.save(any())).willReturn(mockUser);
+
+        User user = userService.addUser(name, email);
+
+        assertThat(user.getName(), is(name));
+    }
+
 }
