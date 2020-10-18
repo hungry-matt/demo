@@ -46,4 +46,10 @@ public class UserController {
         userService.updateUser(id, resource.getName(), resource.getEmail(), resource.getLevel());
         return "{}";
     }
+
+    @DeleteMapping("/users/{id}")
+    public String deactivate(@PathVariable("id") Long id) {
+        userService.deactivateUser(id);
+        return "";
+    }
 }
