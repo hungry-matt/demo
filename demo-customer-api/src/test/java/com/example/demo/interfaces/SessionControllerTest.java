@@ -58,7 +58,6 @@ public class SessionControllerTest {
 
     @Test
     public void createWithNotExistedEmail() throws Exception {
-        //password를 잘못 입력 했을경우
         given(userService.authenticate("x@test.com", "test"))
                 .willThrow(EmailNotExistedException.class);
 
