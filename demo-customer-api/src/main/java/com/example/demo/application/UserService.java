@@ -23,8 +23,10 @@ public class UserService {
     }
 
     public User registerUser(String name, String email, String password) {
+
         Optional<User> existed = userRepository.findByEmail(email);
 
+        //Optional 객체에 저장된 값이 존재하면 true, 존재하지 않으면 false 반환.
         if(existed.isPresent()) {
             throw new EmailExistedException(email);
         }
@@ -40,5 +42,9 @@ public class UserService {
                 .build();
 
         return userRepository.save(user);
+    }
+
+    public User authenticate(String email, String password) {
+        return null;
     }
 }
