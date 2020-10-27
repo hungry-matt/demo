@@ -1,10 +1,8 @@
 package com.example.demo.application;
 
-import com.example.demo.domain.RestaurantRepository;
 import com.example.demo.domain.User;
 import com.example.demo.domain.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +15,12 @@ public class UserService {
 
     private UserRepository userRepository;
 
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User registerUser(String name, String email, String password) {
@@ -31,7 +32,6 @@ public class UserService {
             throw new EmailExistedException(email);
         }
 
-        PasswordEncoder passwordEncoder =  new BCryptPasswordEncoder();
         String encodedPassword =  passwordEncoder.encode(password);
 
         User user = User.builder()
@@ -45,6 +45,13 @@ public class UserService {
     }
 
     public User authenticate(String email, String password) {
-        return null;
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EmailNotExistedException(email));
+
+        if(!passwordEncoder.matches(password, user.getPassword())){
+            throw new PasswordWrongException();
+        }
+
+        return user;
     }
 }
