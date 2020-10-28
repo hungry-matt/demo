@@ -53,6 +53,8 @@ public class UserServiceTest {
 
         User user = userService.registerUser(name, email, password);
 
+        verify(userRepository).save(any());
+
         assertThat(user.getName(), is(name));
     }
 
