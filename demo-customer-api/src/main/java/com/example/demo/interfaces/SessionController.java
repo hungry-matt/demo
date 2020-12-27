@@ -3,6 +3,8 @@ package com.example.demo.interfaces;
 import com.example.demo.application.SessionRequestDto;
 import com.example.demo.application.SessionResponseDto;
 import com.example.demo.application.UserService;
+import com.example.demo.domain.User;
+import com.example.demo.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,18 +18,22 @@ import java.net.URISyntaxException;
 public class SessionController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PostMapping("/session")
     public ResponseEntity<SessionResponseDto> create(
             @RequestBody SessionRequestDto resource
     ) throws URISyntaxException {
-        String accessToken = "ACCESSTOKEN";
 
         String email = resource.getEmail();
         String password = resource.getPassword();
 
-        userService.authenticate(email, password);
+        User user = userService.authenticate(email, password);
+
+        String accessToken = jwtUtil.createToken(user.getId(), user.getName());
 
         String url = "/session";
         return ResponseEntity.created(new URI(url))

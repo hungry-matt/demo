@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -44,4 +45,5 @@ public class User {
     public void deactivate() {
         this.level = 0L;
     }
+
 }

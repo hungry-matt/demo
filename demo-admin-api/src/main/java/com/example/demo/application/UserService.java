@@ -1,6 +1,5 @@
 package com.example.demo.application;
 
-import com.example.demo.domain.CategoryRepository;
 import com.example.demo.domain.User;
 import com.example.demo.domain.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

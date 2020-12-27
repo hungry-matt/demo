@@ -23,5 +23,4 @@ public class UserTest {
 
         assertThat(user.isActive(), is(false));
     }
-
 }
