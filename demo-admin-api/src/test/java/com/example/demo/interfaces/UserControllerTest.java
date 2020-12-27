@@ -2,7 +2,6 @@ package com.example.demo.interfaces;
 
 import com.example.demo.application.UserService;
 import com.example.demo.domain.User;
-import org.apache.catalina.Group;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -57,7 +54,10 @@ public class UserControllerTest {
         String name = "admin";
         String email = "admin@example.com";
 
-        User user = User.builder().name(name).email(email).build();
+        User user = User.builder()
+                .name(name)
+                .email(email)
+                .build();
 
         given(userService.addUser(name, email)).willReturn(user);
 

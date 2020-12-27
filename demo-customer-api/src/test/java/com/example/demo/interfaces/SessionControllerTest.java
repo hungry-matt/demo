@@ -32,14 +32,21 @@ public class SessionControllerTest {
 
     @Test
     public void createWithValidAttributes() throws Exception {
+        String email = "test@test.com";
+        String password = "test";
+
+        User mockUser = User.builder().password("ACCESSTOKEN").build();
+
+        given(userService.authenticate(email, password)).willReturn(mockUser);
+
         mvc.perform(post("/session")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"tester\", \"email\":\"test@test.com\", \"password\":\"test\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", "/session"))
-                .andExpect(content().string("{\"accessToken\":\"ACCESSTOKEN\"}"));
+                .andExpect(content().string("{\"accessToken\":\"ACCESSTOKE\"}"));
 
-        verify(userService).authenticate(eq("test@test.com"), eq("test"));
+        verify(userService).authenticate(eq(email), eq(password));
     }
 
     @Test
