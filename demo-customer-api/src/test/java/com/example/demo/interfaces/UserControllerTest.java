@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -41,11 +40,11 @@ public class UserControllerTest {
                 .password(password)
                 .build();
 
-        given(userService.registerUser(name, email, password)).willReturn(user);
+        given(userService.registerUser(any(), any(), any())).willReturn(user);
 
         mvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"tester\", \"email\":\"test@test.com\", \"password\":\"test\"}"))
+                .content("{\"name\":\"testser\", \"email\":\"tester@test.com\", \"password\":\"test\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", "/users/1004"));
 
