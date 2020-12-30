@@ -26,7 +26,7 @@ public class JwtUtilTest {
         //아이디와 이름으로 토큰 생성
         String token = jwtUtil.createToken(1004L, "John");
 
-        assertThat(token, containsString("..."));
+        assertThat(token, containsString("."));
     }
 
     @Test

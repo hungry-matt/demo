@@ -2,7 +2,6 @@ package com.example.demo.interfaces;
 
 import com.example.demo.application.ReviewService;
 import com.example.demo.domain.Review;
-import com.example.demo.interfaces.ReviewController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +38,12 @@ public class ReviewControllerTest {
                     .build()
         );
 
+        String token = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwNCwibmFtZSI6IkpvaG4ifQ.e7Di1AdEZKKnbrMqLxdXChp9ds35Tqn5OFmsxMY1uE8";
+
         mvc.perform(post("/restaurants/1/reviews/")
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"joker\", \"score\" : \"3\", \"description\":\"test\"}"))
+                .content("{\"score\" : \"3\", \"description\":\"test\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(content().string("{}"))
                 .andExpect(header().string("location", "/restaurants/1/reviews/1004"));
