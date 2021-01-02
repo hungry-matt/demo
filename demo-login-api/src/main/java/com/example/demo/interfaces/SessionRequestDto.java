@@ -1,4 +1,4 @@
-package com.example.demo.application;
+package com.example.demo.interfaces;
 
 import lombok.Data;
 

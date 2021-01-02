@@ -1,7 +1,5 @@
 package com.example.demo.interfaces;
 
-import com.example.demo.application.SessionRequestDto;
-import com.example.demo.application.SessionResponseDto;
 import com.example.demo.application.UserService;
 import com.example.demo.domain.User;
 import com.example.demo.utils.JwtUtil;
