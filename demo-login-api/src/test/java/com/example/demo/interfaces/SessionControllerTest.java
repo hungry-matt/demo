@@ -45,11 +45,12 @@ public class SessionControllerTest {
         User mockUser = User.builder()
                 .id(id)
                 .name(name)
+                .level(1L)
                 .build();
 
         given(userService.authenticate(email, password)).willReturn(mockUser);
 
-        given(jwtUtil.createToken(id, name)).willReturn("header.payload.signature");
+        given(jwtUtil.createToken(id, name, null)).willReturn("header.payload.signature");
 
         mvc.perform(post("/session")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -88,5 +89,38 @@ public class SessionControllerTest {
                 .andExpect(status().isBadRequest());
 
         verify(userService).authenticate(eq("x@test.com"), eq("test"));
+    }
+
+    @Test
+    public void createRestaurantOwner() throws Exception {
+        Long id = 1004L;
+        String name = "John";
+        String email = "test@test.com";
+        String password = "test";
+        Long resturantId = 300L;
+        Long level = 50L;
+
+
+        User mockUser = User.builder()
+                .id(id)
+                .name(name)
+                .level(level)
+                .restaurantId(resturantId)
+                .build();
+
+        given(userService.authenticate(email, password)).willReturn(mockUser);
+
+        given(jwtUtil.createToken(id, name, resturantId)).willReturn("header.payload.signature");
+
+        mvc.perform(post("/session")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"tester\", \"email\":\"test@test.com\", \"password\":\"test\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(header().string("location", "/session"))
+                .andExpect(content().string(
+                        containsString("{\"accessToken\":\"header.payload.signature\"}"))
+                );
+
+        verify(userService).authenticate(eq(email), eq(password));
     }
 }

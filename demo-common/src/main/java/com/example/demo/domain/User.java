@@ -30,6 +30,8 @@ public class User {
 
     private String password;
 
+    private Long restaurantId;
+
     @Setter
     @NotNull
     private Long level;
@@ -46,4 +48,12 @@ public class User {
         this.level = 0L;
     }
 
+    public void setRestaurantId(Long restaurantId) {
+        this.level = 50L;
+        this.restaurantId = restaurantId;
+    }
+
+    public boolean isRestaurantOwner() {
+        return level == 50L;
+    }
 }

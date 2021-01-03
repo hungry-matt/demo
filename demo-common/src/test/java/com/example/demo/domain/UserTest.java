@@ -23,4 +23,22 @@ public class UserTest {
 
         assertThat(user.isActive(), is(false));
     }
+
+    @Test
+    public void getRestaurantOwner() {
+        //사용자가 레스토랑 주인인지 확인
+
+        User user = User.builder()
+                .level(1L)
+                .build();
+
+        //권한 level 확인
+        assertThat(user.isRestaurantOwner(), is(false));
+
+        //권한 및 레스토랑 아이디 부여
+        user.setRestaurantId(1004L);
+
+        assertThat(user.isRestaurantOwner(), is(true));
+        assertThat(user.getRestaurantId(), is(1004L));
+    }
 }

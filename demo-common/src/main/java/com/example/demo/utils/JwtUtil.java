@@ -1,6 +1,7 @@
 package com.example.demo.utils;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -15,11 +16,17 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String createToken(Long id, String name) {
+    public String createToken(Long id, String name, Long restaurantId) {
 
-        return Jwts.builder()
+        JwtBuilder builder = Jwts.builder()
                 .claim("id", id)
-                .claim("name", name)
+                .claim("name", name);
+
+        if (restaurantId != null) {
+            builder.claim("restaurantId", restaurantId);
+        }
+
+        return builder
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
