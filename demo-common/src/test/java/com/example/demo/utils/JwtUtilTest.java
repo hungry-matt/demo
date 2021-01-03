@@ -1,8 +1,6 @@
 package com.example.demo.utils;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,7 +22,7 @@ public class JwtUtilTest {
     @Test
     public void crateToken() {
         //아이디와 이름으로 토큰 생성
-        String token = jwtUtil.createToken(1004L, "John");
+        String token = jwtUtil.createToken(1004L, "John", null);
 
         assertThat(token, containsString("."));
     }

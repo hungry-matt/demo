@@ -37,45 +37,45 @@ public class UserServiceTest {
     }
 
     @Test
-    public void registerUser() {
-        String name = "tester";
-        String email = "tester@test.com";
+    public void authenticateWithValidAttributes() {
+        String email = "test@test.com";
         String password = "test";
 
-        User mockUser = User.builder()
-                .id(1004L)
-                .name(name)
-                .email(email)
-                .password(password)
-                .build();
-
-        given(userRepository.save(any())).willReturn(mockUser);
-
-        User user = userService.registerUser(name, email, password);
-
-        verify(userRepository).save(any());
-
-        assertThat(user.getName(), is(name));
-    }
-
-    @Test(expected = EmailExistedException.class)
-    public void registerUserWithExistedEmail() {
-        String name = "tester";
-        String email = "tester@test.com";
-        String password = "test";
-
-        User mockUser = User.builder()
-                .id(1004L)
-                .name(name)
-                .email(email)
-                .password(password)
-                .build();
+        User mockUser = User.builder().email(email).build();
 
         given(userRepository.findByEmail(email)).willReturn(Optional.of(mockUser));
 
-        userService.registerUser(name, email, password);
+        given(passwordEncoder.matches(any(), any())).willReturn(true);
 
-        verify(userRepository, never()).save(any());
+        User user = userService.authenticate(email, password);
+
+        //email check
+        assertThat(user.getEmail(), is(email));
     }
 
+    @Test(expected = EmailNotExistedException.class)
+    public void authenticateWithNotExistedEmail() {
+        //email 인증이 실패하는 경우
+        String email = "x@test.com";
+        String password = "test";
+
+        given(userRepository.findByEmail(email)).willReturn(Optional.empty());
+
+        userService.authenticate(email, password);
+    }
+
+    @Test(expected = PasswordWrongException.class)
+    public void authenticateWithWrongPassword() {
+        //password 인증이 실패하는 경우
+        String email = "test@test.com";
+        String password = "x";
+
+        User mockUser = User.builder().email(email).build();
+
+        given(userRepository.findByEmail(email)).willReturn(Optional.of(mockUser));
+
+        given(passwordEncoder.matches(any(), any())).willReturn(false);
+
+        userService.authenticate(email, password);
+    }
 }

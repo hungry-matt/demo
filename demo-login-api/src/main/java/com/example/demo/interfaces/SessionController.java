@@ -1,7 +1,5 @@
 package com.example.demo.interfaces;
 
-import com.example.demo.application.SessionRequestDto;
-import com.example.demo.application.SessionResponseDto;
 import com.example.demo.application.UserService;
 import com.example.demo.domain.User;
 import com.example.demo.utils.JwtUtil;
@@ -33,7 +31,8 @@ public class SessionController {
 
         User user = userService.authenticate(email, password);
 
-        String accessToken = jwtUtil.createToken(user.getId(), user.getName());
+        String accessToken = jwtUtil.createToken(user.getId(), user.getName()
+                    , user.isRestaurantOwner() ? user.getRestaurantId() : null);
 
         String url = "/session";
         return ResponseEntity.created(new URI(url))
