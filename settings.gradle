@@ -4,4 +4,5 @@ include 'demo-admin-api'
 include 'demo-common'
 include 'demo-customer-api'
 include 'demo-login-api'
+include 'demo-restaurant-api'
 

@@ -22,6 +22,7 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
+    //예약 등록
     @PostMapping("/restaurants/{restaurantId}/reservations")
     public ResponseEntity<?> create(
             @PathVariable Long restaurantId,
