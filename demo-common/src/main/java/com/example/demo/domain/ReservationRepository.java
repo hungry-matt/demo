@@ -11,4 +11,6 @@ public interface ReservationRepository extends CrudRepository<Reservation, Long>
     Reservation save(Reservation reservation);
 
     List<Reservation> findAllByRestaurantId(Long restaurantId);
+
+    List<Reservation> findAllByUserId(Long userId);
 }
