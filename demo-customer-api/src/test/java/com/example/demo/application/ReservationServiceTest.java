@@ -7,6 +7,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,5 +52,30 @@ public class ReservationServiceTest {
         assertThat(reservation.getName(), is(name));
 
         verify(reservationRepository).save(any(Reservation.class));
+    }
+
+    @Test
+    public void getResevations() {
+
+        Long userId = 1004L;
+
+        given(reservationRepository.findAllByUserId(userId)).will(invocation -> {
+            List<Reservation> reservationList =  new ArrayList<>();
+
+            reservationList.add(Reservation.builder()
+                    .userId(userId)
+                    .build());
+
+            return reservationList;
+         });
+
+        List<Reservation> reservationList = reservationService.getReservations(userId);
+
+        Reservation reservation = reservationList.get(0);
+
+        assertThat(userId, is(reservation.getUserId()));
+
+        verify(reservationRepository).findAllByUserId(userId);
+
     }
 }

@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -27,9 +27,10 @@ public class ReservationControllerTest {
     @MockBean
     private ReservationService reservationService;
 
+    private String token = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwNCwibmFtZSI6IkpvaG4ifQ.e7Di1AdEZKKnbrMqLxdXChp9ds35Tqn5OFmsxMY1uE8";
+
     @Test
     public void create() throws Exception {
-        String token = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwNCwibmFtZSI6IkpvaG4ifQ.e7Di1AdEZKKnbrMqLxdXChp9ds35Tqn5OFmsxMY1uE8";
 
         Reservation mockReservation = Reservation.builder()
                 .id(1L)
@@ -52,5 +53,17 @@ public class ReservationControllerTest {
         Integer partySize = 20;
 
         verify(reservationService).addReservation(1L, userId, name, date, time, partySize);
+    }
+
+    @Test
+    public void list() throws Exception {
+        //손님이 등록한 예약 현황을 조회 한다.
+        mvc.perform(get("/restaurants/reservations")
+                .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+
+        Long userId = 1004L;
+
+        verify(reservationService).getReservations(userId);
     }
 }

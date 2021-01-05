@@ -4,6 +4,8 @@ import com.example.demo.domain.Reservation;
 import com.example.demo.domain.ReservationRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ReservationService {
 
@@ -25,5 +27,9 @@ public class ReservationService {
                 .build();
 
         return reservationRepository.save(reservation);
+    }
+
+    public List<Reservation> getReservations(Long userId) {
+        return reservationRepository.findAllByUserId(userId);
     }
 }
