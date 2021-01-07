@@ -18,84 +18,56 @@ services:
     image: openjdk:8
     env_file: .env
     volumes:
-      - ./run.sh:/home/eatgo/run.sh
-      - ./eatgo-login-api/build/libs:/home/eatgo/libs
+      - ./run.sh:/home/demo/run.sh
+      - ./demo-login-api/build/libs:/home/demo/libs
     ports:
       - 8001:8080
     depends_on:
       - mysql
-    command: bash -c "cd /home/eatgo && sh run.sh"
+    command: bash -c "cd /home/demo && sh run.sh"
   admin-api:
     image: openjdk:8
     env_file: .env
     volumes:
-      - ./run.sh:/home/eatgo/run.sh
-      - ./eatgo-admin-api/build/libs:/home/eatgo/libs
+      - ./run.sh:/home/demo/run.sh
+      - ./demo-admin-api/build/libs:/home/demo/libs
     ports:
       - 8002:8080
     depends_on:
       - mysql
-    command: bash -c "cd /home/eatgo && sh run.sh"
+    command: bash -c "cd /home/demo && sh run.sh"
   customer-api:
     image: openjdk:8
     env_file: .env
     volumes:
-      - ./run.sh:/home/eatgo/run.sh
-      - ./eatgo-customer-api/build/libs:/home/eatgo/libs
+      - ./run.sh:/home/demo/run.sh
+      - ./demo-customer-api/build/libs:/home/demo/libs
     ports:
       - 8003:8080
     depends_on:
       - mysql
-    command: bash -c "cd /home/eatgo && sh run.sh"
+    command: bash -c "cd /home/demo && sh run.sh"
   restaurant-api:
     image: openjdk:8
     env_file: .env
     volumes:
-      - ./run.sh:/home/eatgo/run.sh
-      - ./eatgo-restaurant-api/build/libs:/home/eatgo/libs
+      - ./run.sh:/home/demo/run.sh
+      - ./demo-restaurant-api/build/libs:/home/demo/libs
     ports:
       - 8004:8080
     depends_on:
       - mysql
-    command: bash -c "cd /home/eatgo && sh run.sh"
-  admin-web:
+    command: bash -c "cd /home/demo && sh run.sh"
+  demo-web:
     image: node:10.16.3
     volumes:
-      - ./eatgo-admin-web:/home/eatgo
+      - ./demo-web:/home/demo
     ports:
       - 8082:3000
     environment:
       - VUE_APP_API_BASE_URL=http://localhost:8002
       - VUE_APP_LOGIN_API_BASE_URL=http://localhost:8001
-    command: bash -c "cd /home/eatgo && npm run serve"
-    healthcheck:
-      test: curl -sS http://localhost:8080 || exit 1
-      timeout: 10s
-      retries: 10
-  customer-web:
-    image: node:10.16.3
-    volumes:
-      - ./eatgo-customer-web:/home/eatgo
-    ports:
-      - 8083:3000
-    environment:
-      - VUE_APP_API_BASE_URL=http://localhost:8003
-      - VUE_APP_LOGIN_API_BASE_URL=http://localhost:8001
-    command: bash -c "cd /home/eatgo && npm run serve"
-    healthcheck:
-      test: curl -sS http://localhost:8080 || exit 1
-      timeout: 10s
-      retries: 10
-  restaurant-web:
-    image: node:10.16.3
-    volumes:
-      - ./eatgo-restaurant-web:/home/eatgo
-    ports:
-      - 8084:3000
-    environment:
-      - VUE_APP_API_BASE_URL=http://localhost:8004
-      - VUE_APP_LOGIN_API_BASE_URL=http://localhost:8001
-    command: bash -c "cd /home/eatgo && npm run serve"
+    command: bash -c "cd /home/demo && npm run serve"
     healthcheck:
       test: curl -sS http://localhost:8080 || exit 1
       timeout: 10s
