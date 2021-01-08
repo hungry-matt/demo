@@ -4,6 +4,16 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 jwt:
   secret: 12345678901234567890123456789012
+
+---
+
+spring:
+  profiles: mysql
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST}:3306/${MYSQL_DATABASE}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
