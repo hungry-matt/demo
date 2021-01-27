@@ -1,5 +1,6 @@
 package com.example.demo.interfaces;
 
+import com.example.demo.api.ApiResult;
 import com.example.demo.application.ReviewService;
 import com.example.demo.domain.Review;
 import com.example.demo.interfaces.review.ReviewRequestDto;
@@ -13,6 +14,8 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+
+import static com.example.demo.api.ApiResult.OK;
 
 @CrossOrigin
 @RestController
@@ -45,7 +48,8 @@ public class ReviewController {
     }
 
     @GetMapping("/restaurants/{restaurantId}/reviews")
-    public List<Review> list(@PathVariable("restaurantId") Long id) {
-        return reviewService.getReviews(id);
+    @ResponseBody
+    public ApiResult<?> list(@PathVariable("restaurantId") Long id) {
+        return OK(reviewService.getReviews(id));
     }
 }
