@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static java.time.LocalDateTime.now;
+
 @Service
 public class ReservationService {
 
@@ -24,6 +26,7 @@ public class ReservationService {
                 .date(date)
                 .time(time)
                 .partySize(partySize)
+                .createAt(now())
                 .build();
 
         return reservationRepository.save(reservation);
