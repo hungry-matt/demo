@@ -59,14 +59,14 @@ public class UserControllerTest {
                 .email(email)
                 .build();
 
-        given(userService.addUser(name, email)).willReturn(user);
+        given(userService.addUser(name, email, name)).willReturn(user);
 
         mvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"admin\",\"email\":\"admin@example.com\"}"))
                 .andExpect(status().isCreated());
 
-        verify(userService).addUser(name, email);
+        verify(userService).addUser(name, email, name);
     }
 
     @Test

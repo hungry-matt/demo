@@ -3,6 +3,8 @@ package com.example.demo.application;
 import com.example.demo.domain.User;
 import com.example.demo.domain.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,9 +15,16 @@ public class UserService {
 
     private UserRepository userRepository;
 
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder();
+    }
+
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     public List<User> getUsers() {
@@ -23,10 +32,14 @@ public class UserService {
         return users;
     }
 
-    public User addUser(String name, String email) {
+    public User addUser(String name, String email, String password) {
+
+        String encodePassword = passwordEncoder.encode(password);
+
         User user = User.builder()
                     .name(name)
                     .email(email)
+                    .password(encodePassword)
                     .level(1L)
                     .build();
 

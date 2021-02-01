@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,12 +57,19 @@ public class UserServiceTest {
     public void addUser() {
         String name = "admin";
         String email = "admin@example.com";
+        String password = "test";
 
-        User mockUser = User.builder().name(name).email(email).build();
+        User mockUser = User.builder()
+                .name(name)
+                .email(email)
+                .password(password)
+                .build();
 
         given(userRepository.save(any())).willReturn(mockUser);
 
-        User user = userService.addUser(name, email);
+        User user = userService.addUser(name, email, password);
+
+        verify(userRepository).save(any());
 
         assertThat(user.getName(), is(name));
     }
