@@ -40,7 +40,7 @@ public class UserService {
                     .name(name)
                     .email(email)
                     .password(encodePassword)
-                    .level(1L)
+                    .level(50L)
                     .build();
 
         return userRepository.save(user);

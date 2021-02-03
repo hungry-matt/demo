@@ -63,6 +63,7 @@ public class UserServiceTest {
                 .name(name)
                 .email(email)
                 .password(password)
+                .level(50L)
                 .build();
 
         given(userRepository.save(any())).willReturn(mockUser);
@@ -72,6 +73,7 @@ public class UserServiceTest {
         verify(userRepository).save(any());
 
         assertThat(user.getName(), is(name));
+        assertThat(true, is(user.isRestaurantOwner()));
     }
 
     @Test
