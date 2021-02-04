@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin
@@ -34,7 +33,7 @@ public class UserController {
     public ResponseEntity<?> create(
             @RequestBody User resource
     ) throws URISyntaxException {
-        User user = userService.addUser(resource.getName(), resource.getEmail());
+        User user = userService.addUser(resource.getName(), resource.getEmail(), resource.getPassword());
         String url = "/users/" + user.getId();
         return ResponseEntity.created(new URI(url)).body("{}");
     }

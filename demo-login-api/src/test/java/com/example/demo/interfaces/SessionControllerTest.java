@@ -15,6 +15,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -108,19 +110,19 @@ public class SessionControllerTest {
                 .restaurantId(resturantId)
                 .build();
 
-        given(userService.authenticate(email, password)).willReturn(mockUser);
+        given(userService.authenticateOwner(email, password)).willReturn(mockUser);
 
         given(jwtUtil.createToken(id, name, resturantId)).willReturn("header.payload.signature");
 
-        mvc.perform(post("/session")
+        mvc.perform(post("/session/admin")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"tester\", \"email\":\"test@test.com\", \"password\":\"test\"}"))
-                .andExpect(status().isCreated())
-                .andExpect(header().string("location", "/session"))
+                .andExpect(status().isOk())
                 .andExpect(content().string(
                         containsString("{\"accessToken\":\"header.payload.signature\"}"))
                 );
 
-        verify(userService).authenticate(eq(email), eq(password));
+        verify(userService).authenticateOwner(eq(email), eq(password));
     }
+
 }

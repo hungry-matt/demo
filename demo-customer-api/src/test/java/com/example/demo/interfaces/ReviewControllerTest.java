@@ -17,7 +17,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
@@ -59,5 +59,14 @@ public class ReviewControllerTest {
                 .andDo(MockMvcResultHandlers.print());
 
         verify(reviewService, never()).addReview(eq(1L), any());
+    }
+
+    @Test
+    public void list() throws Exception {
+        mvc.perform(get("/restaurant/1/reviews")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(reviewService).getReviews(any());
     }
 }
