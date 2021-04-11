@@ -1,5 +1,6 @@
 package com.example.demo.application;
 
+import com.example.demo.api.error.BadRequestException;
 import com.example.demo.domain.User;
 import com.example.demo.domain.UserRepository;
 import org.junit.Before;
@@ -75,6 +76,26 @@ public class UserServiceTest {
         given(userRepository.findByEmail(email)).willReturn(Optional.of(mockUser));
 
         given(passwordEncoder.matches(any(), any())).willReturn(false);
+
+        userService.authenticate(email, password);
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void authenticateWithNotOwner() {
+        String email = "test@test.com";
+        String password = "test";
+
+        User mockUser = User.builder()
+                .email(email)
+                .password(password)
+                .level(1L)
+                .build();
+
+        given(userRepository.findByEmail(email)).willReturn(Optional.of(mockUser));
+
+        given(passwordEncoder.matches(any(), any())).willReturn(true);
+
+        given(userService.authenticateOwner(email, password)).willReturn(mockUser);
 
         userService.authenticate(email, password);
     }

@@ -1,5 +1,6 @@
 package com.example.demo.interfaces;
 
+import com.example.demo.api.ApiResult;
 import com.example.demo.application.UserService;
 import com.example.demo.domain.User;
 import com.example.demo.utils.JwtUtil;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import static com.example.demo.api.ApiResult.OK;
 
 @CrossOrigin
 @RestController
@@ -38,5 +41,19 @@ public class SessionController {
                  .body(SessionResponseDto.builder()
                          .accessToken(accessToken)
                          .build());
+    }
+
+    @PostMapping("/session/admin")
+    public ApiResult<?> createAdmin(
+            @RequestBody SessionRequestDto requestDto
+    ) {
+
+        User user = userService.authenticateOwner(requestDto.getEmail(), requestDto.getPassword());
+
+        String accessToken = jwtUtil.createToken(user.getId(), user.getName(), user.getRestaurantId());
+
+        return OK(SessionResponseDto.builder()
+                .accessToken(accessToken)
+                .build());
     }
 }
