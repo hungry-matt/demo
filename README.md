@@ -1,23 +1,30 @@
-# Getting Started
+# 요구 사항
+1. 공통 기능
+    - 모든 서비스에서 사용되고 있는 공통 도메인을 핸들링할 수 있습니다.
+    - 오류 발생시 오류 내용을 핸들링할 수 있습니다.
+    - API 공통 Response로 핸들링할 수 있습니다.
+    - JWT Token의 생성을 핸들링할 수 있습니다.
+2. 로그인 기능
+    - 매장 관리자와 손님의 회원가입, 로그인, 권한을 관리할 수 있습니다.
+3. 매장 관리 기능
+    - 관리자가 관리하는 매장을 등록할 수 있습니다.
+    - 매장에서 주문할 수 있는 요리 메뉴를 등록할 수 있습니다.
+    - 매장으로 예약된 정보를 조회할 수 있습니다.
+    - 예약 했던 손님들의 모든 리뷰를 조회할 수 있습니다.
+4. 매장 예약 기능
+    - 손님은 지역별, 요리 종류별로 매장을 조회할 수 있습니다.
+    - 로그인한 손님은 선택한 매장에서 예약 시간, 예약 날짜, 예약자 수를 작성 하여 예약할 수 있습니다.
+    - 손님은 예약 했던 매장에서 평점과 리뷰를 작성할 수 있습니다.
 
-### Reference Documentation
-For further reference, please consider the following sections:
-
-* [Official Gradle documentation](https://docs.gradle.org)
-* [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.3.3.RELEASE/gradle-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.3.3.RELEASE/gradle-plugin/reference/html/#build-image)
-* [Spring Web](https://docs.spring.io/spring-boot/docs/2.3.3.RELEASE/reference/htmlsingle/#boot-features-developing-web-applications)
-* [Spring Boot DevTools](https://docs.spring.io/spring-boot/docs/2.3.3.RELEASE/reference/htmlsingle/#using-boot-devtools)
-
-### Guides
-The following guides illustrate how to use some features concretely:
-
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/bookmarks/)
-
-### Additional Links
-These additional references should also help you:
-
-* [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
-
+# 기술 스택
+- Java 8
+- Spring Boot 2.2.1.RELEASE
+- Spring Security
+- Spring Data JPA
+- JWT
+- Lombok
+- Gradle 6.4.1
+- H2 DB
+- MySQL
+- JUnit 5
+- Docker
